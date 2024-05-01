@@ -6,7 +6,6 @@ class GameManager():
     def __init__(self):
         self.player = Player()
         self.dealer = Dealer()
-        self.hasPlayerLost = False
 
     def startGameTerminal(self):
         while self.player.chips > 0:
@@ -64,19 +63,19 @@ class GameManager():
 
             # If the player went over 21 they lose
             if self.player.score > 21:
+                print("Over 21, you lost")
                 return False
             
             # if the player is at exactly 21 they win 
             if self.player.score == 21:
+                print("21, you won")
                 return True 
-
 
         """
         Deal out the second hand for the dealer, they keep going until > 17 
         """
         self.dealer.dealSecondHand(deck=newDeck)
         print(f"Dealer's Hand: {' '.join(str(card) for card in self.dealer.hand)}  :  {self.dealer.score}")
-
 
         """
         Final checks, first check if the dealer went over 21
@@ -103,6 +102,13 @@ class GameManager():
         except ValueError:
             print("Invalid input. Please enter a valid integer.")
             return False
+    
+    def checkDealerBlackjack(self):
+        if self.dealer.score == 21:
+            print("Dealer's hand is 21, you lost.")
+            return True
+        return False
+
 
     def playerInput(self, action: str, deck: Deck):
         match action:
@@ -112,6 +118,9 @@ class GameManager():
             case "stand":
                 return False
             case "double down":
+                if len(self.player.hand) > 2: 
+                    print("Can't double down after hitting")
+                    return True
                 if not self.player.doubleDown(deck):
                     print("Not enough chips to double down")
                     return True
@@ -119,14 +128,8 @@ class GameManager():
                 return False
             case "surrender":
                 self.player.surrender()
-                self.hasPlayerLost = True
                 return False
 
-    def checkDealerBlackjack(self):
-        if self.dealer.score == 21:
-            print("Dealer's hand is 21, you lost.")
-            return True
-        return False
-
+    
 newGame = GameManager()
 newGame.startGameTerminal()
