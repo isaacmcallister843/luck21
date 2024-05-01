@@ -1,10 +1,10 @@
 from deck import Deck 
 
 class Player():
-    def __init__(self) -> None:
+    def __init__(self, startingChips) -> None:
         self.hand = []
         self.score = 0
-        self.chips  = 200 
+        self.chips  = startingChips 
         self.currentBet = 0 
     
     def bet(self, amount): 
